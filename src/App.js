@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 
-const apiKey = "e80ebfcec5956c603f613b9e47078833";
+const apiKey = "YourAPIkey";
 
 const cities = [
   { city: "London", lon: "51.509865", lat: "-0.118092" },
