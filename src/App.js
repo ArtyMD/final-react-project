@@ -1,80 +1,200 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
+import Spinner from "./Components/Spinner/Spinner";
 
-const apiKey = "YourAPIkey";
+const apiKey = "7c23a27119e9681a7c0d9dfd5955bc76";
 
 const cities = [
-  { city: "London", lon: "51.509865", lat: "-0.118092" },
-  { city: "Toronto", lon: "-79.384293", lat: "43.653908" },
+  { city: "London", lat: "51.509865", lon: "-0.118092" },
+  { city: "Toronto", lat: "43.653908", lon: "-79.384293" },
+  { city: "Moscow", lat: "55.755826", lon: "37.617300" },
+  { city: "Chisinau", lat: "47.010453", lon: "28.863810" },
+  { city: "Tokyo", lat: "35.689487", lon: "139.691711" },
 ];
 
 function GetWeather() {
   const [data, setData] = useState(null);
   const [selected, setSelected] = useState(null);
   const [foundCity, setFoundCity] = useState(null);
-  console.log(data);
-  console.log(selected);
+  const [forecast, setForecast] = useState("");
+  // console.log(data);
+  // console.log(selected);
 
   useEffect(() => {
     const found = cities.find((element) => element.city === selected);
-    console.log("Found city: ", found);
+    console.log(forecast);
+    // console.log("Found city: ", found);
 
     if (found) {
       setFoundCity(found.city);
       fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${found.lat}&lon=${found.lon}&appid=${apiKey}&units=metric`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${found.lat}&appid=${apiKey}&lon=${found.lon}&units=metric`
       )
         .then((response) => {
-          console.log(response)
-          if(response.ok){
+          console.log(response);
+          if (response.ok) {
             return response.json();
+          } else {
+            throw Error("Error, failed to fetch api data");
           }
-          else {
-            throw Error('Error, failed to fetch api data')
-          }
-          
         })
         .then((json) => setData(json))
         .catch((error) => console.error(error));
     }
-  }, [selected]);
+  }, [selected, forecast]);
 
-  let weatherTemp, weatherFeelsLike, tempMax, tempMin;
+  let weatherTemp,
+    weatherFeelsLike,
+    tempMax,
+    tempMin,
+    threeHourWeather,
+    threeHourTemp,
+    fiveDayForecast;
 
   if (data) {
     weatherTemp = data.list[0].main.temp;
     weatherFeelsLike = data.list[0].main.feels_like;
     tempMax = data.list[0].main.temp_max;
     tempMin = data.list[0].main.temp_min;
+    threeHourWeather = [
+      data.list[1],
+      data.list[2],
+      data.list[3],
+      data.list[4],
+      data.list[5],
+    ];
+    fiveDayForecast = data.list;
+  }
+
+  function getDayFromTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const dayOfWeek = date.getDay();
+    return dayOfWeek;
+  }
+
+  console.log(data);
+  function handleClick(a) {
+    setForecast(a);
+  }
+
+  function getTodaysDayOfWeek() {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    return dayOfWeek;
+  }
+
+  function convertTimeToAMPM(timeString) {
+    const date = new Date(timeString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const convertedHours = hours % 12 || 12;
+    return `${convertedHours}:${
+      minutes < 10 ? "0" + minutes : minutes
+    } ${ampm}`;
+  }
+
+  function nextDaysForecast(array) {
+    let newArray = [];
+    array.forEach((temp, index) => {
+      newArray.push(<div key={index}>{temp}</div>);
+    });
+    return <div>{newArray}</div>;
   }
 
   return (
-    <div>
+    <>
       <select
         onChange={(e) => {
           setSelected(e.target.value);
+          console.log(data);
         }}
         defaultValue="Choose City"
         className="form-select"
         aria-label="Default select example"
       >
-        <option value="Choose City">Choose City</option>
+        <option value="Selected City">Select City</option>
         <option value="London">London</option>
         <option value="Toronto">Toronto</option>
+        <option value="Moscow">Moscow</option>
+        <option value="Chisinau">Chisinau</option>
+        <option value="Tokyo">Tokyo</option>
       </select>
+      <div className="button-wrapper">
+        <button
+          onClick={() => handleClick("current")}
+          value={"Current Weather"}
+          className="forecast-option-btn"
+        >
+          Current Weather
+        </button>
+        <button
+          onClick={() => handleClick("3h")}
+          value={"3h"}
+          className="forecast-option-btn"
+        >
+          3 Hour Forcast
+        </button>
+        <button
+          onClick={() => handleClick("5d")}
+          value={"5d"}
+          className="forecast-option-btn"
+        >
+          5 Day Forcast
+        </button>
+      </div>
+
       {data ? (
-        <div>
-          <div>
-            It is {weatherTemp}° in {foundCity}
-          </div>
-          <div>And Feels Like {weatherFeelsLike}°</div>
-          <div>Max Temperature {tempMax}°</div>
-          <div>Min Temperature {tempMin}°</div>
+        <div className="forecastWrapper">
+          {forecast === "current" && (
+            <div className="forecastWrapper2">
+              <div className="mainWeather">
+                <div className="city">{foundCity}</div>
+                {Math.round(weatherTemp)}°
+              </div>
+              <div className="secondaryWeather">
+                <div className="tempBlock">
+                  {Math.round(weatherFeelsLike)}° <div className="tempBlockTxt">Feels Like</div>
+                </div>
+                <div className="tempBlock">
+                  {Math.round(tempMax)}° <div className="tempBlockTxt">High</div>
+                </div>
+                <div className="tempBlock">
+                  {Math.round(tempMin)}° <div className="tempBlockTxt">Low</div>
+                </div>
+              </div>
+            </div>
+          )}
+          {forecast === "3h" && (
+            <div className="row-wrapper">
+              <div className="threeHourWrapper-rows">
+                {threeHourWeather.map((weather) => (
+                  <>
+                    <div className="threeHourWrapper-details">
+                      <div className="temperature ">
+                        {Math.round(weather.main.temp)}°
+                      </div>
+                      <div className="time">
+                        {convertTimeToAMPM(weather.dt_txt)}
+                      </div>
+                    </div>
+                  </>
+                ))}
+              </div>
+            </div>
+          )}
+          {forecast === "5d" && (
+            <div className="row-wrapper">
+              <div className="threeHourWrapper-rows">
+                {nextDaysForecast(data.list)}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
-        <div>Loading...</div>
+        <Spinner />
       )}
-    </div>
+    </>
   );
 }
 

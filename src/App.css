@@ -1,10 +1,164 @@
 .App {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   align-items: center;
   text-align: center;
   width: 100vw;
+  background: rgb(255, 240, 168);
+  background: linear-gradient(
+    45deg,
+    rgb(240, 199, 19) 24%,
+    rgba(184, 0, 255, 1) 100%
+  );
+  height: 100vh;
+  padding: 20px;
+  max-width: 800p;
 }
 
+.form-select {
+  max-width: 500px;
+}
 
+.button-wrapper {
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.button-wrapper button {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  width: 30%;
+  outline: 1px solid rgba(255, 255, 255, 0.473);
+  color: white;
+  font-weight: 300;
+  border: none;
+  border-radius: 10px;
+  background-color: transparent;
+  padding: 15px;
+}
+
+.forecast-option-btn:hover,
+:focus {
+  background: linear-gradient(
+    45deg,
+    rgba(42, 52, 231, 1) 0%,
+    rgba(255, 64, 210, 1) 100%
+  );
+  outline: none;
+  box-shadow: 0px 10px 15px 0px rgba(0, 0, 0, 0.26);
+}
+
+.row-wrapper {
+  width: 90%;
+  max-width: 500px;
+
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  margin-top: 25px;
+}
+.threeHourWrapper-hour,
+.threeHourWrapper-temp {
+  height: 50px;
+  outline: 1px solid white;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.forecastWrapper {
+  width: 100%;
+  display: flex;
+  flex-shrink: 1;
+  justify-content: center;
+  align-items: center;
+}
+.threeHourWrapper-rows {
+  width: 100%;
+  height: 50px;
+  margin: 20px 0;
+}
+.threeHourWrapper-details {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  outline: 1px solid white;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.temperature {
+  font-size: 50px;
+  color: rgb(255, 255, 255);
+}
+
+.time {
+  color: ghostwhite;
+  font-size: 30px;
+}
+
+.mainWeather{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column-reverse;
+  max-width: 500px;
+  margin-top: 20px;
+  border-radius: 10px;
+  outline: 2px solid white;
+  font-size: 50px;
+  width: 100%;
+  padding: 20px;
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.forecastWrapper2{
+  width: 100%;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.city{
+  font-size: 20px;
+}
+
+.secondaryWeather{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  margin-top: 20px;
+  height: 70px;
+  max-width: 390px;
+  width: 100%;
+  max-width: 500px;
+  
+}
+
+.tempBlock{
+  font-size: 30px;
+ 
+  width: 30%;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  outline: 1px solid white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  border-radius: 10px;
+  height: 70px;
+}
+
+.tempBlockTxt {
+  font-size: 15px;
+}
