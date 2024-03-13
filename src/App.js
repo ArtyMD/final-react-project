@@ -69,7 +69,7 @@ function GetWeather() {
   }
 
   const filteredArrays = fiveDayForecast
-    ? fiveDayForecast.filter((_, index) => (index + 6 ) % 8 === 1)
+    ? fiveDayForecast.filter((_, index) => (index + 6) % 8 === 1)
     : [];
 
   function DayOfWeek(timestamp) {
@@ -138,7 +138,7 @@ function GetWeather() {
           value={"3h"}
           className="forecast-option-btn"
         >
-          3 Hour Forcast
+          5 Hour Forecast
         </button>
         <button
           onClick={() => handleClick("5d")}
