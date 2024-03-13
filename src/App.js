@@ -22,8 +22,6 @@ function GetWeather() {
 
   useEffect(() => {
     const found = cities.find((element) => element.city === selected);
-    console.log(forecast);
-    // console.log("Found city: ", found);
 
     if (found) {
       setFoundCity(found.city);
@@ -48,7 +46,6 @@ function GetWeather() {
     tempMax,
     tempMin,
     threeHourWeather,
-    threeHourTemp,
     fiveDayForecast;
 
   if (data) {
@@ -66,21 +63,38 @@ function GetWeather() {
     fiveDayForecast = data.list;
   }
 
-  function getDayFromTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const dayOfWeek = date.getDay();
-    return dayOfWeek;
-  }
-
   console.log(data);
   function handleClick(a) {
     setForecast(a);
   }
 
-  function getTodaysDayOfWeek() {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    return dayOfWeek;
+  const filteredArrays = fiveDayForecast
+    ? fiveDayForecast.filter((_, index) => (index + 6 ) % 8 === 1)
+    : [];
+
+  function DayOfWeek(timestamp) {
+    const [datePart, timePart] = timestamp.split(" ");
+
+    const [year, month, day] = datePart.split("-");
+
+    const date = new Date(year, month - 1, day); // month - 1 because months are 0-indexed in JavaScript
+
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const dayOfWeek = days[date.getDay()];
+
+    return (
+      <div>
+        <p>{dayOfWeek}</p>
+      </div>
+    );
   }
 
   function convertTimeToAMPM(timeString) {
@@ -94,20 +108,11 @@ function GetWeather() {
     } ${ampm}`;
   }
 
-  function nextDaysForecast(array) {
-    let newArray = [];
-    array.forEach((temp, index) => {
-      newArray.push(<div key={index}>{temp}</div>);
-    });
-    return <div>{newArray}</div>;
-  }
-
   return (
     <>
       <select
         onChange={(e) => {
           setSelected(e.target.value);
-          console.log(data);
         }}
         defaultValue="Choose City"
         className="form-select"
@@ -154,10 +159,12 @@ function GetWeather() {
               </div>
               <div className="secondaryWeather">
                 <div className="tempBlock">
-                  {Math.round(weatherFeelsLike)}° <div className="tempBlockTxt">Feels Like</div>
+                  {Math.round(weatherFeelsLike)}°{" "}
+                  <div className="tempBlockTxt">Feels Like</div>
                 </div>
                 <div className="tempBlock">
-                  {Math.round(tempMax)}° <div className="tempBlockTxt">High</div>
+                  {Math.round(tempMax)}°{" "}
+                  <div className="tempBlockTxt">High</div>
                 </div>
                 <div className="tempBlock">
                   {Math.round(tempMin)}° <div className="tempBlockTxt">Low</div>
@@ -186,7 +193,16 @@ function GetWeather() {
           {forecast === "5d" && (
             <div className="row-wrapper">
               <div className="threeHourWrapper-rows">
-                {nextDaysForecast(data.list)}
+                {filteredArrays.map((weather) => (
+                  <>
+                    <div className="threeHourWrapper-details">
+                      <div className="temperature ">
+                        {Math.round(weather.main.temp)}°
+                      </div>
+                      <div className="time">{DayOfWeek(weather.dt_txt)}</div>
+                    </div>
+                  </>
+                ))}
               </div>
             </div>
           )}
